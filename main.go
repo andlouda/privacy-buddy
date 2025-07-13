@@ -1,14 +1,16 @@
 package main
 
 import (
+	"context"
+	"embed"
+
 	"privacy-buddy/backend"
 	appsvc "privacy-buddy/backend/appsvc"
 	anynetwork "privacy-buddy/backend/network"
-	"privacy-buddy/backend/network/tools"
+	anynettools "privacy-buddy/backend/network/tools"
 	platform_network "privacy-buddy/backend/platform/network"
 	"privacy-buddy/backend/report"
 	"privacy-buddy/backend/system"
-	"embed"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -25,8 +27,10 @@ func main() {
 	reportSvc := report.NewReportService(systemSvc, networkSvc)
 
 	tracerouteSvc := platform_network.NewTracerouteService()
-	networkToolsSvc := tools.NewNetworkToolsService(tracerouteSvc)
-	advancedNetworkToolsSvc := tools.NewAdvancedNetworkToolsService()
+	networkToolsSvc := anynettools.NewNetworkToolsService(tracerouteSvc)
+	advancedNetworkToolsSvc := anynettools.GetAdvancedNetworkToolsService() // ✅ holt Singleton
+
+	// ✅ Korrekte Initialisierung über Konstruktor
 
 	err := wails.Run(&options.App{
 		Title:  "privacy-buddy",
@@ -36,7 +40,13 @@ func main() {
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        appsvcInstance.Startup,
+		OnStartup: func(ctx context.Context) {
+			// Dein ursprünglicher Startup-Call
+			appsvcInstance.Startup(ctx)
+
+			// 👇 Wichtig: Singleton bekommt seinen Context
+			advancedNetworkToolsSvc.WailsInit(ctx)
+		},
 		Bind: []interface{}{
 			appsvcInstance,
 			systemSvc,
@@ -46,7 +56,7 @@ func main() {
 			&anynetwork.PublicIPService{},
 			reportSvc,
 			networkToolsSvc,
-			advancedNetworkToolsSvc,
+			advancedNetworkToolsSvc, // ✅ Jetzt korrekt initialisiert
 		},
 	})
 

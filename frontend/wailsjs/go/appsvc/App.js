@@ -5,3 +5,7 @@
 export function Greet(arg1) {
   return window['go']['appsvc']['App']['Greet'](arg1);
 }
+
+export function Startup(arg1) {
+  return window['go']['appsvc']['App']['Startup'](arg1);
+}

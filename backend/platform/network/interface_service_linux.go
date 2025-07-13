@@ -67,9 +67,9 @@ func (s *LinuxNetworkInterfaceService) ListInterfaces() ([]anynetwork.NetworkInt
 
 		netInterfaces = append(netInterfaces, anynetwork.NetworkInterface{
 			Name:           iface.Name,
-			DisplayName:    iface.Name, // gopsutil doesn't provide DisplayName directly
+			DisplayName:    description, // Use pcap description as DisplayName
 			Description:    description,
-			HardwareAddr:   iface.HardwareAddr.String(),
+			HardwareAddr:   iface.HardwareAddr,
 			MTU:            iface.MTU,
 			Flags:          flags,
 			Addrs:          ipAddrs,

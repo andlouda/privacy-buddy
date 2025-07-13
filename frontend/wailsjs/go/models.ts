@@ -1,10 +1,10 @@
 export namespace network {
 	
 	export class ARPEntry {
-	    ipAddress: string;
-	    macAddress: string;
-	    interface: string;
-	    type: string;
+	    IPAddress: string;
+	    MACAddress: string;
+	    Interface: string;
+	    Type: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new ARPEntry(source);
@@ -12,10 +12,10 @@ export namespace network {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.ipAddress = source["ipAddress"];
-	        this.macAddress = source["macAddress"];
-	        this.interface = source["interface"];
-	        this.type = source["type"];
+	        this.IPAddress = source["IPAddress"];
+	        this.MACAddress = source["MACAddress"];
+	        this.Interface = source["Interface"];
+	        this.Type = source["Type"];
 	    }
 	}
 	export class CaptureTemplate {
@@ -37,17 +37,17 @@ export namespace network {
 	    }
 	}
 	export class NetworkConnection {
-	    fd: number;
-	    family: number;
-	    type: number;
-	    localIP: string;
-	    localPort: number;
-	    remoteIP: string;
-	    remotePort: number;
-	    status: string;
-	    pid: number;
-	    processName: string;
-	    protocol: string;
+	    FD: number;
+	    Family: number;
+	    Type: number;
+	    LocalIP: string;
+	    LocalPort: number;
+	    RemoteIP: string;
+	    RemotePort: number;
+	    Status: string;
+	    PID: number;
+	    ProcessName: string;
+	    Protocol: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new NetworkConnection(source);
@@ -55,32 +55,32 @@ export namespace network {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.fd = source["fd"];
-	        this.family = source["family"];
-	        this.type = source["type"];
-	        this.localIP = source["localIP"];
-	        this.localPort = source["localPort"];
-	        this.remoteIP = source["remoteIP"];
-	        this.remotePort = source["remotePort"];
-	        this.status = source["status"];
-	        this.pid = source["pid"];
-	        this.processName = source["processName"];
-	        this.protocol = source["protocol"];
+	        this.FD = source["FD"];
+	        this.Family = source["Family"];
+	        this.Type = source["Type"];
+	        this.LocalIP = source["LocalIP"];
+	        this.LocalPort = source["LocalPort"];
+	        this.RemoteIP = source["RemoteIP"];
+	        this.RemotePort = source["RemotePort"];
+	        this.Status = source["Status"];
+	        this.PID = source["PID"];
+	        this.ProcessName = source["ProcessName"];
+	        this.Protocol = source["Protocol"];
 	    }
 	}
 	export class NetworkInterface {
-	    name: string;
-	    displayName: string;
-	    description: string;
-	    hardwareAddr: string;
-	    mtu: number;
-	    flags: string[];
-	    addrs: string[];
-	    isUp: boolean;
-	    isLoopback: boolean;
-	    isBroadcast: boolean;
-	    isPointToPoint: boolean;
-	    isMulticast: boolean;
+	    Name: string;
+	    DisplayName: string;
+	    Description: string;
+	    HardwareAddr: number[];
+	    MTU: number;
+	    Flags: string[];
+	    Addrs: string[];
+	    IsUp: boolean;
+	    IsLoopback: boolean;
+	    IsBroadcast: boolean;
+	    IsPointToPoint: boolean;
+	    IsMulticast: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new NetworkInterface(source);
@@ -88,18 +88,18 @@ export namespace network {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.name = source["name"];
-	        this.displayName = source["displayName"];
-	        this.description = source["description"];
-	        this.hardwareAddr = source["hardwareAddr"];
-	        this.mtu = source["mtu"];
-	        this.flags = source["flags"];
-	        this.addrs = source["addrs"];
-	        this.isUp = source["isUp"];
-	        this.isLoopback = source["isLoopback"];
-	        this.isBroadcast = source["isBroadcast"];
-	        this.isPointToPoint = source["isPointToPoint"];
-	        this.isMulticast = source["isMulticast"];
+	        this.Name = source["Name"];
+	        this.DisplayName = source["DisplayName"];
+	        this.Description = source["Description"];
+	        this.HardwareAddr = source["HardwareAddr"];
+	        this.MTU = source["MTU"];
+	        this.Flags = source["Flags"];
+	        this.Addrs = source["Addrs"];
+	        this.IsUp = source["IsUp"];
+	        this.IsLoopback = source["IsLoopback"];
+	        this.IsBroadcast = source["IsBroadcast"];
+	        this.IsPointToPoint = source["IsPointToPoint"];
+	        this.IsMulticast = source["IsMulticast"];
 	    }
 	}
 	export class PublicIPInfo {

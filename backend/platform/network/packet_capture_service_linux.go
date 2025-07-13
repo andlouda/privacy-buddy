@@ -68,10 +68,8 @@ func (s *LinuxPacketCaptureService) StartCapture(ctx context.Context, interfaceN
 				// Extract relevant information and send to channel
 				// This is a simplified example, real implementation would parse layers
 				packetChannel <- anynetwork.CapturedPacket{
-					Timestamp: packet.Metadata().Timestamp.Format(time.RFC3339),
+					Timestamp: packet.Metadata().Timestamp.Format(time.RFC3339Nano),
 					Length:    packet.Metadata().Length,
-					Payload:   packet.Data(),
-					Summary:   packet.Dump(), // For demonstration, use Dump()
 				}
 			}
 		}

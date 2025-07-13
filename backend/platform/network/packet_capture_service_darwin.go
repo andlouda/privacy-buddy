@@ -69,10 +69,8 @@ func (s *DarwinPacketCaptureService) StartCapture(ctx context.Context, interface
 				// Extract relevant information and send to channel
 				// This is a simplified example, real implementation would parse layers
 				packetChannel <- anynetwork.CapturedPacket{
-					Timestamp: packet.Metadata().Timestamp,
+					Timestamp: packet.Metadata().Timestamp.Format(time.RFC3339Nano),
 					Length:    packet.Metadata().Length,
-					Payload:   packet.Data(),
-					Summary:   packet.Dump(), // For demonstration, use Dump()
 				}
 			}
 		}

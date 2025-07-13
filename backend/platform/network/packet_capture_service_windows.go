@@ -9,7 +9,9 @@ import (
 	"time"
 
 	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
+	"github.com/wailsapp/wails/v2/pkg/runtime" // Import runtime
 
 	anynetwork "privacy-buddy/backend/network"
 )
@@ -17,6 +19,12 @@ import (
 // WindowsPacketCaptureService provides Windows-specific implementation for packet capturing.
 type WindowsPacketCaptureService struct {
 	handle *pcap.Handle
+	ctx    context.Context // Add context to the struct
+}
+
+// WailsInit is called at application startup
+func (s *WindowsPacketCaptureService) WailsInit(ctx context.Context) {
+	s.ctx = ctx
 }
 
 // StartCapture starts capturing packets on the specified interface with an optional BPF filter and duration.
@@ -66,13 +74,45 @@ func (s *WindowsPacketCaptureService) StartCapture(ctx context.Context, interfac
 					return
 				}
 				// Extract relevant information and send to channel
-				// This is a simplified example, real implementation would parse layers
-				packetChannel <- anynetwork.CapturedPacket{
-					Timestamp: packet.Metadata().Timestamp.Format(time.RFC3339),
-					Length:    packet.Metadata().Length,
-					Payload:   packet.Data(),
-					Summary:   packet.Dump(), // For demonstration, use Dump()
+				srcIP := "Unknown"
+				dstIP := "Unknown"
+				protocol := "Unknown"
+
+				networkLayer := packet.NetworkLayer()
+				if networkLayer != nil {
+					if ipv4, ok := networkLayer.(*layers.IPv4); ok {
+						srcIP = ipv4.SrcIP.String()
+						dstIP = ipv4.DstIP.String()
+						protocol = ipv4.Protocol.String()
+					} else if ipv6, ok := networkLayer.(*layers.IPv6); ok {
+						srcIP = ipv6.SrcIP.String()
+						dstIP = ipv6.DstIP.String()
+						protocol = ipv6.NextHeader.String()
+					}
 				}
+
+				transportLayer := packet.TransportLayer()
+				if transportLayer != nil {
+					if tcp, ok := transportLayer.(*layers.TCP); ok {
+						protocol = "TCP"
+						srcIP = fmt.Sprintf("%s:%d", srcIP, tcp.SrcPort)
+						dstIP = fmt.Sprintf("%s:%d", dstIP, tcp.DstPort)
+					} else if udp, ok := transportLayer.(*layers.UDP); ok {
+						protocol = "UDP"
+						srcIP = fmt.Sprintf("%s:%d", srcIP, udp.SrcPort)
+						dstIP = fmt.Sprintf("%s:%d", dstIP, udp.DstPort)
+					}
+				}
+
+				capturedPacket := anynetwork.CapturedPacket{
+					Timestamp:   packet.Metadata().Timestamp.Format(time.RFC3339Nano),
+					Source:      srcIP,
+					Destination: dstIP,
+					Protocol:    protocol,
+					Length:      packet.Metadata().Length,
+				}
+				packetChannel <- capturedPacket
+				runtime.EventsEmit(s.ctx, "packetCaptureEvent", capturedPacket) // Emit event to frontend
 			}
 		}
 	}()

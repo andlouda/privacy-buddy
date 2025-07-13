@@ -67,7 +67,7 @@ func (s *DarwinNetworkInterfaceService) ListInterfaces() ([]anynetwork.NetworkIn
 
 		netInterfaces = append(netInterfaces, anynetwork.NetworkInterface{
 			Name:        iface.Name,
-			DisplayName: iface.Name, // gopsutil doesn't provide DisplayName directly
+			DisplayName: description, // Use pcap description as DisplayName
 			Description: description,
 			HardwareAddr: iface.HardwareAddr,
 			MTU:         iface.MTU,

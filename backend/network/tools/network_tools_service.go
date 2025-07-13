@@ -246,7 +246,7 @@ func (s *NetworkToolsService) GetNetworkInterfaces() ([]anynetwork.NetworkInterf
 	for _, pcapDev := range pcapDevs {
 		log.Printf("PCAP Device - Name: %s, Description: %s", pcapDev.Name, pcapDev.Description)
 		var addresses []string
-		var hardwareAddr string
+		var hardwareAddr net.HardwareAddr
 		var mtu int
 		var flagsList []string
 		var isUp, isLoopback, isBroadcast, isPointToPoint, isMulticast bool
@@ -257,7 +257,7 @@ func (s *NetworkToolsService) GetNetworkInterfaces() ([]anynetwork.NetworkInterf
 			for _, addr := range addrs {
 				addresses = append(addresses, addr.String())
 			}
-			hardwareAddr = netDev.HardwareAddr.String()
+			hardwareAddr = netDev.HardwareAddr
 			mtu = netDev.MTU
 			flagsList = strings.Split(netDev.Flags.String(), ",")
 			isUp = (netDev.Flags & net.FlagUp) != 0

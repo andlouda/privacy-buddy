@@ -4,6 +4,7 @@ package network
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/google/gopacket/pcap"
 	gopsnet "github.com/shirou/gopsutil/v3/net"
@@ -29,7 +30,7 @@ func (s *WindowsNetworkInterfaceService) ListInterfaces() ([]anynetwork.NetworkI
 	var netInterfaces []anynetwork.NetworkInterface
 	for _, iface := range interfaces {
 		// Debug output for MAC address
-		fmt.Printf("Interface: %s, Flags: %v, MAC Address: %s\n", iface.Name, iface.Flags, iface.HardwareAddr)
+		fmt.Printf("Interface: %s, Flags: %v, MAC Address (gopsutil): %s\n", iface.Name, iface.Flags, iface.HardwareAddr)
 
 		addrs := iface.Addrs
 
@@ -55,26 +56,29 @@ func (s *WindowsNetworkInterfaceService) ListInterfaces() ([]anynetwork.NetworkI
 			flags = append(flags, "multicast")
 		}
 
+				displayName := iface.Name
 		description := ""
+
 		for _, dev := range pcapDevices {
 			if dev.Name == iface.Name {
 				description = dev.Description
+				displayName = dev.Description // Use pcap description as DisplayName
 				break
 			}
 		}
 
-		if iface.HardwareAddr == "" {
-			fmt.Printf("Warning: MAC address is empty for interface %s\n", iface.Name)
-		}
 		netInterfaces = append(netInterfaces, anynetwork.NetworkInterface{
 			Name:           iface.Name,
-			DisplayName:    iface.Name, // gopsutil doesn't provide DisplayName directly
+			DisplayName:    displayName,
 			Description:    description,
-			HardwareAddr:   iface.HardwareAddr, // Default from gopsutil
-			// Attempt to get HardwareAddr from pcap device if available and gopsutil's is empty
-			// Note: pcap.Interface.HardwareAddr is a []byte, convert to string
-			// This part needs to be carefully integrated into the loop where `dev` is matched.
-			// For now, let's assume we'll get it from the matched `dev`.
+						HardwareAddr:   func() net.HardwareAddr{
+				mac, err := net.ParseMAC(iface.HardwareAddr)
+				if err != nil {
+					fmt.Printf("Warning: Failed to parse MAC address %s for interface %s: %v\n", iface.HardwareAddr, iface.Name, err)
+					return nil
+				}
+				return mac
+			}(),
 			MTU:            iface.MTU,
 			Flags:          flags,
 			Addrs:          ipAddrs,

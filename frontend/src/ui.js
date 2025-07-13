@@ -198,29 +198,66 @@ export async function createAdvancedNetworkToolsSection() {
   section.className = 'terminal-output box blink-box section';
   section.innerHTML = `<div class="box-header"> Erweiterte Netzwerk-Tools</div><div class="box-content">Lade Inhalt...</div>`;
 
-  console.log("createAdvancedNetworkToolsSection: Starte fetch für HTML-Inhalt.");
-  try {
-    const r = await fetch('./src/sections/advanced_network_tools.html');
-    if (!r.ok) {
-        console.error(`Fehler beim Laden der HTML-Datei: ${r.status} ${r.statusText}`);
-        throw new Error('Netzwerkantwort war nicht ok.');
-    }
-    const html = await r.text();
+  const htmlContent = `<div class="card" style="white-space: normal;">
+    <h2>Advanced Network Tools</h2>
 
-    console.log("createAdvancedNetworkToolsSection: HTML-Inhalt erfolgreich geladen.");
-    section.innerHTML = html;
-    console.log("createAdvancedNetworkToolsSection: HTML in DOM-Struktur eingefügt.");
-    if (typeof initializeAdvancedNetworkTools === 'function') {
-        setTimeout(() => {
-          initializeAdvancedNetworkTools(section);
-          console.log("createAdvancedNetworkToolsSection: Event-Handler initialisiert.");
-        }, 0);
-    } else {
-        console.warn("initializeAdvancedNetworkTools ist keine Funktion. Event-Handler wurden nicht gesetzt.");
-    }
-  } catch (error) {
-    console.error('Fehler während des Fetch-Vorgangs:', error);
-    section.querySelector('#advanced-network-tools-container').innerHTML = `<p style="color: red;">Fehler beim Laden der Tools: ${error.message}</p>`;
+    <section class="tool-group">
+        <h3>Network Interfaces</h3>
+        <button id="get-interfaces-btn">Get Interfaces</button>
+        <div id="interfaces-output" class="output-area"></div>
+    </section>
+
+    <section class="tool-group">
+        <h3>Packet Capture</h3>
+        <label for="capture-interface">Interface:</label>
+        <select id="interface-select" name="interface-select"></select>
+ 
+        <label for="bpf-filter">BPF Filter:</label>
+        <input type="text" id="bpf-filter" placeholder="e.g., tcp port 80 or udp port 53">
+        <label for="capture-duration">Duration (seconds):</label>
+        <input type="number" id="capture-duration" value="10" min="1">
+        <button id="start-capture-btn">Start Capture</button>
+        <button id="stop-capture-btn" disabled>Stop Capture</button>
+        <div id="capture-templates-dropdown">
+            <label for="template-select">Templates:</label>
+            <select id="template-select">
+                <option value="">Select a template</option>
+            </select>
+        </div>
+        <div id="packet-capture-output" class="output-area terminal-output"></div>
+
+        <h3>Save Current Capture Settings as Template</h3>
+        <label for="new-template-name">Template Name:</label>
+        <input type="text" id="new-template-name" placeholder="e.g., My Custom Filter">
+        <label for="new-template-description">Description (optional):</label>
+        <input type="text" id="new-template-description" placeholder="e.g., Filter for specific hosts">
+        <button id="save-template-btn">Save Template</button>
+        <div id="save-template-output" class="output-area"></div>
+    </section>
+
+    <section class="tool-group">
+        <h3>ARP Cache</h3>
+        <button id="get-arp-cache-btn">Get ARP Cache</button>
+        <div id="arp-cache-output" class="output-area"></div>
+    </section>
+
+    <section class="tool-group">
+        <h3>Active Connections (Netstat)</h3>
+        <button id="get-active-connections-btn">Get Active Connections</button>
+        <div id="active-connections-output" class="output-area"></div>
+    </section>
+</div>`;
+
+  console.log("createAdvancedNetworkToolsSection: HTML-Inhalt direkt eingefügt.");
+  section.innerHTML = htmlContent;
+  console.log("createAdvancedNetworkToolsSection: HTML in DOM-Struktur eingefügt.");
+  if (typeof initializeAdvancedNetworkTools === 'function') {
+      setTimeout(() => {
+        initializeAdvancedNetworkTools(section);
+        console.log("createAdvancedNetworkToolsSection: Event-Handler initialisiert.");
+      }, 0);
+  } else {
+      console.warn("initializeAdvancedNetworkTools ist keine Funktion. Event-Handler wurden nicht gesetzt.");
   }
 
   console.log("createAdvancedNetworkToolsSection: Gebe das erstellte (jetzt gefüllte) Element zurück.");
