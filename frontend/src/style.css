@@ -1,0 +1,185 @@
+/* Global Styles */
+:root {
+    --background-color: #0a0a0a;
+    --text-color: #00ff00;
+    --accent-color: #00cc00;
+    --border-color: #008800;
+    --shadow-color: rgba(0, 255, 0, 0.3);
+    --font-mono: 'Roboto Mono', monospace;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box; /* Global box-sizing */
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Ensure all elements inherit border-box */
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* Neuer Hauptcontainer für das gesamte App-Layout */
+#app-container {
+    display: flex; /* Flexbox für Side-by-Side-Layout */
+    flex-direction: row; /* Sidebar und Inhalt nebeneinander */
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px; /* Gesamter App-Padding */
+    gap: 20px; /* Abstand zwischen Sidebar und Inhalt */
+}
+
+/* Der dynamische Inhaltsbereich */
+#content-view {
+    flex-grow: 1; /* Nimmt den restlichen Platz ein */
+    display: flex; /* Inhaltselemente innerhalb vertikal stapeln */
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--accent-color);
+    text-shadow: 0 0 5px var(--shadow-color);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+/* General Text */
+p {
+    margin-bottom: 10px;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--text-color);
+    text-shadow: 0 0 8px var(--shadow-color);
+}
+
+/* Buttons */
+button {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+    border: 1px solid var(--accent-color);
+    padding: 10px 20px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px var(--shadow-color);
+    border-radius: 3px;
+}
+
+button:hover {
+    background-color: var(--background-color);
+    color: var(--accent-color);
+    box-shadow: 0 0 10px var(--shadow-color);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 0 0 3px var(--shadow-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 3px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: inset 0 0 8px var(--shadow-color), 0 0 8px var(--shadow-color);
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Terminal Output - General styles for any terminal-like display */
+.terminal-output {
+    background: #050505;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    font-size: 0.9rem;
+    white-space: pre-wrap; 
+    word-break: break-all;
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px var(--shadow-color);
+    width: 100%; /* Ensure it takes full width of its parent */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink-caret {
+    50% { border-color: transparent; }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.blink-box {
+    animation: blink 1.5s infinite alternate;
+}
+
+/* Style for the external interface row */
+.external-interface {
+    background-color: #1a2c1a; /* A subtle green highlight */
+    font-weight: bold;
+}
+
+.external-interface td {
+    color: #66ff66; /* Brighter text for the highlighted row */
+}

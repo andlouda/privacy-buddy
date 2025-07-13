@@ -1,0 +1,167 @@
+/* sections.css - Styles for specific sections and components */
+
+.box {
+    background: #1a1a1a;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 15px var(--shadow-color);
+    padding: 25px;
+    border-radius: 8px;
+    width: 100%; /* Allow box to take full width of its parent */
+    margin: 0 auto 20px auto; /* Center the box and add bottom margin */
+    animation: fadeIn 0.8s ease-out;
+}
+
+.tool-group {
+    margin-bottom: 20px; /* war: 40px */
+    padding-bottom: 10px; /* war: 20px */
+    border-bottom: 1px dashed rgba(0, 255, 0, 0.1);
+}
+
+.tool-group:last-child {
+    border-bottom: none;
+}
+
+/* Specific width for boxes within second-view */
+#second-view .box {
+    width: 85%; /* Set specific width for boxes inside second-view */
+    margin: 0 auto 20px auto; /* Center and add spacing */
+}
+
+/* Animations used by sections/boxes */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink-caret {
+    50% { border-color: transparent; }
+}
+
+/* Diese Regeln werden durch das Flexbox-Layout in #app-container und #content-view ersetzt */
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.input-group input {
+    flex-grow: 1;
+}
+
+.input-group button {
+    flex-shrink: 0;
+}
+
+#tracerouteResults {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+#hopList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #050505;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 0 5px var(--shadow-color);
+    border-radius: 5px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+#hopList li {
+    padding: 8px 15px;
+    border-bottom: 1px dashed rgba(0, 255, 0, 0.1);
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+#hopList li:last-child {
+    border-bottom: none;
+}
+
+#hopList li:nth-child(even) {
+    background-color: rgba(0, 255, 0, 0.03);
+}
+
+/* New style for info items to keep label and value on same line with divider */
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline; /* Align text baselines */
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(0, 255, 0, 0.2); /* Make border more visible */
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+/* Styles for boot-like content within boxes */
+.box-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Spacing between lines */
+}
+
+.line-appear {
+    animation: appearLine 0.3s ease-in;
+    padding: 2px 0; /* Add some padding for better spacing */
+    border-bottom: 1px dashed rgba(0, 255, 0, 0.1); /* Subtle line */
+}
+
+.line-appear:last-child {
+    border-bottom: none;
+}
+
+@keyframes appearLine {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  color: #0f0;
+  background-color: #111;
+  font-family: monospace;
+}
+
+th, td {
+  border: 1px solid #0f0;
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+thead {
+  background-color: #030;
+  font-weight: bold;
+}
+
+td {
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.uplink-interface {
+  background-color: #0033006b; /* Dunkles Grün */
+  color: #00ff00;
+  font-weight: bold;
+}
+
+.up-interface {
+  background-color: #002222;
+  color: #00cc66;
+}
+
+.down-interface {
+  background-color: #22000046;
+  color: #ff5555;
+}
+

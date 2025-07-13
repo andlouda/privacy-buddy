@@ -1,0 +1,15 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "privacy-buddy",
+  "outputfilename": "privacy-buddy",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "andlouda",
+    "email": "andrelouda@googlemail.com"
+  },
+  "width": 1228,
+  "height": 921
+}
