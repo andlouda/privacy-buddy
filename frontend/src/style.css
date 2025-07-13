@@ -157,7 +157,7 @@ textarea:focus {
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0.5; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -167,11 +167,11 @@ textarea:focus {
 
 @keyframes blink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.85; }
 }
 
 .blink-box {
-    animation: blink 1.5s infinite alternate;
+    animation: blink 10s ease-in-out infinite alternate;
 }
 
 /* Style for the external interface row */

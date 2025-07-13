@@ -90,6 +90,58 @@ function populateTemplateDropdown(selectElement, templates, bpfFilterInput, capt
   });
 }
 
+function isLocalIp(ip) {
+  return ip.startsWith('10.') || ip.startsWith('172.16.') || ip.startsWith('172.17.') || ip.startsWith('172.18.') || ip.startsWith('172.19.') || ip.startsWith('172.20.') || ip.startsWith('172.21.') || ip.startsWith('172.22.') || ip.startsWith('172.23.') || ip.startsWith('172.24.') || ip.startsWith('172.25.') || ip.startsWith('172.26.') || ip.startsWith('172.27.') || ip.startsWith('172.28.') || ip.startsWith('172.29.') || ip.startsWith('172.30.') || ip.startsWith('172.31.') || ip.startsWith('192.168.') || ip.startsWith('127.') || ip.startsWith('169.254.');
+}
+
+function createPacketRow(packet) {
+  const row = document.createElement('tr');
+  let protocolClass = '';
+  let sourceIpClass = '';
+  let destIpClass = '';
+  let flagsClass = '';
+
+  // Protocol coloring
+  switch (packet.Protocol.toLowerCase()) {
+    case 'tcp':
+      protocolClass = 'protocol-tcp';
+      break;
+    case 'udp':
+      protocolClass = 'protocol-udp';
+      break;
+    case 'icmp':
+      protocolClass = 'protocol-icmp';
+      break;
+    default:
+      protocolClass = 'protocol-other';
+  }
+
+  // IP address coloring
+  sourceIpClass = isLocalIp(packet.Source) ? 'ip-local' : 'ip-external';
+  destIpClass = isLocalIp(packet.Destination) ? 'ip-local' : 'ip-external';
+
+  // TCP Flags coloring
+  if (packet.Summary.includes('[SYN]')) {
+    flagsClass = 'flag-syn';
+  } else if (packet.Summary.includes('[RST]')) {
+    flagsClass = 'flag-rst';
+  } else if (packet.Summary.includes('[FIN]')) {
+    flagsClass = 'flag-fin';
+  }
+
+  row.className = protocolClass; // Apply protocol class to the whole row
+
+  row.innerHTML = `
+    <td>${packet.Timestamp}</td>
+    <td class="${sourceIpClass}">${packet.Source}</td>
+    <td class="${destIpClass}">${packet.Destination}</td>
+    <td class="protocol-cell ${protocolClass}">${packet.Protocol}</td>
+    <td>${packet.Length}</td>
+    <td class="flags-cell ${flagsClass}">${packet.Summary}</td>
+  `;
+  return row;
+}
+
 function setupCaptureListeners(outputElement, startBtn, stopBtn) {
   if (eventListenerInitialized) return;
   eventListenerInitialized = true;
@@ -98,17 +150,24 @@ function setupCaptureListeners(outputElement, startBtn, stopBtn) {
 
   EventsOn('packetCaptureEvent', packet => {
     console.debug('[packetCaptureEvent]', packet);
-    const line = document.createElement('p');
-    line.textContent = `[${packet.Timestamp}] ${packet.Source} -> ${packet.Destination} (${packet.Protocol}) [${packet.Length}] ${packet.Summary}`;
-    outputElement.appendChild(line);
+    const tableBody = outputElement.querySelector('tbody');
+    if (!tableBody) {
+      console.error('Table body not found in packet capture output.');
+      return;
+    }
+    const row = createPacketRow(packet);
+    tableBody.appendChild(row);
     outputElement.scrollTop = outputElement.scrollHeight;
   });
 
   EventsOn('packetCaptureStopped', msg => {
     console.debug('[packetCaptureStopped] Received:', msg);
-    const line = document.createElement('p');
-    line.textContent = `🛑 Capture stopped: ${msg}`;
-    outputElement.appendChild(line);
+    const tableBody = outputElement.querySelector('tbody');
+    if (tableBody) {
+      const line = document.createElement('tr');
+      line.innerHTML = `<td colspan="6">🛑 Capture stopped: ${msg}</td>`;
+      tableBody.appendChild(line);
+    }
     startBtn.disabled = false;
     stopBtn.disabled = true;
     EventsOff('packetCaptureEvent');
@@ -166,7 +225,23 @@ export function initializeAdvancedNetworkTools(sectionElement) {
 
     if (!selected || isNaN(dur)) return;
 
-    output.innerHTML = '⏳ Starting packet capture...';
+    output.innerHTML = `
+      <table class="packet-capture-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Proto</th>
+            <th>Length</th>
+            <th>Summary/Flags</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">⏳ Starting packet capture...</td></tr>
+        </tbody>
+      </table>
+    `;
     startBtn.disabled = true;
     stopBtn.disabled = false;
 
@@ -185,7 +260,12 @@ export function initializeAdvancedNetworkTools(sectionElement) {
 
   stopBtn.addEventListener('click', async () => {
     console.debug('[stopBtn] Clicked');
-    output.innerHTML += '\n⏹️ Stopping capture...';
+    const tableBody = output.querySelector('tbody');
+    if (tableBody) {
+      const row = document.createElement('tr');
+      row.innerHTML = '<td colspan="6">⏹️ Stopping capture...</td>';
+      tableBody.appendChild(row);
+    }
     try {
       await StopPacketCapture();
     } catch (e) {
