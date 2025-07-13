@@ -1,8 +1,10 @@
- AnyClient Netzwerk-Analyse-Tool
+ Privacy-Buddy Netzwerk-Analyse-Tool
 
 
-  AnyClient ist eine Desktop-Anwendung zur Analyse und Diagnose von Netzwerken. Sie bietet eine benutzerfreundliche Oberfläche, um detaillierte Informationen
+  Privacy-Buddy ist eine Desktop-Anwendung zur Analyse und Diagnose von Netzwerken. Sie bietet eine benutzerfreundliche Oberfläche, um detaillierte Informationen
   über Netzwerkschnittstellen, Verbindungen und Systemressourcen zu erhalten und gängige Netzwerk-Tools auszuführen.
+
+** Das Tool ist eine private Spielwiese und wurde durch die kostenlose gemini-cli nun auch ein Spielzeug für's Vibe Coding.
 
   Voraussetzungen
 
@@ -18,8 +20,8 @@
 
    1. Repository klonen:
 
-   1     git clone https://github.com/your-username/anyclient.git
-   2     cd anyclient
+   1     git clone https://github.com/your-username/Privacy-Buddy.git
+   2     cd Privacy-Buddy
 
 
 
@@ -88,9 +90,9 @@
   willkommen.
 
 
-# AnyClient
+# Privacy-Buddy
 
-AnyClient ist eine Desktop-Anwendung, die mit [Wails](https://wails.io/) entwickelt wurde. Sie kombiniert ein Go-Backend mit einem modernen JavaScript-Frontend, das mit Vite erstellt wurde.
+Privacy-Buddy ist eine Desktop-Anwendung, die mit [Wails](https://wails.io/) entwickelt wurde. Sie kombiniert ein Go-Backend mit einem modernen JavaScript-Frontend, das mit Vite erstellt wurde.
 
 ## Architektur
 
